@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "FPSGameMode.generated.h"
 
+
+//This class handles the global Game Mode we are playing
 UCLASS()
 class AFPSGameMode : public AGameModeBase
 {
@@ -20,10 +22,11 @@ public:
 
 	AFPSGameMode();
 
-	//void CompleteMission(APawn* InstigatorPawn, bool bMissionSuccess);
+	//Called when the mission is complete
+	void CompleteMision(APawn* InstigatorPawn);
 
-	//UFUNCTION(BlueprintImplementableEvent, Category = "GameMode")
-	//void OnMissionCompleted(APawn* InstigatorPawn, bool bMissionSuccess);
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnMissionCompleted(APawn* InsitgatorPawn);
 };
 
 

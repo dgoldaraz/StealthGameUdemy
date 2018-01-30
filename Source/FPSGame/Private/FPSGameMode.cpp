@@ -5,6 +5,7 @@
 #include "FPSCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/PlayerController.h"
 //#include "FPSGameState.h"
 
 AFPSGameMode::AFPSGameMode()
@@ -15,47 +16,35 @@ AFPSGameMode::AFPSGameMode()
 
 	// use our custom HUD class
 	HUDClass = AFPSHUD::StaticClass();
-
-	//GameStateClass = AFPSGameState::StaticClass();
 }
 
+void AFPSGameMode::CompleteMision(APawn* InstigatorPawn)
+{
+	if (InstigatorPawn)
+	{
+		InstigatorPawn->DisableInput(nullptr);
 
-//void AFPSGameMode::CompleteMission(APawn* InstigatorPawn, bool bMissionSuccess)
-//{
-//	if (InstigatorPawn)
-//	{
-//		if (SpectatingViewpointClass)
-//		{
-//			TArray<AActor*> ReturnedActors;
-//			UGameplayStatics::GetAllActorsOfClass(this, SpectatingViewpointClass, ReturnedActors);
-//
-//			// Change viewtarget if any valid actor found
-//			if (ReturnedActors.Num() > 0)
-//			{
-//				AActor* NewViewTarget = ReturnedActors[0];
-//
-//				for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; It++)
-//				{
-//					APlayerController* PC = It->Get();
-//					if (PC)
-//					{
-//						PC->SetViewTargetWithBlend(NewViewTarget, 0.5f, EViewTargetBlendFunction::VTBlend_Cubic);
-//					}
-//				}
-//			}
-//		}
-//		else
-//		{
-//			UE_LOG(LogTemp, Warning, TEXT("SpectatingViewpointClass is nullptr. Please update GameMode class with valid subclass. Cannot change spectating view target."));
-//		}
-//	}
-//
-//	AFPSGameState* GS = GetGameState<AFPSGameState>();
-//	if (GS)
-//	{
-//		GS->MulticastOnMissionComplete(InstigatorPawn, bMissionSuccess);
-//	}
-//
-//
-//	OnMissionCompleted(InstigatorPawn, bMissionSuccess);
-//}
+		if (SpectatingViewpointClass)
+		{
+			AActor* NewViewTarget = nullptr;
+			TArray<AActor*> ReturnedActors;
+			UGameplayStatics::GetAllActorsOfClass(this, SpectatingViewpointClass, ReturnedActors);
+
+			if (ReturnedActors.Num() > 0)
+			{
+				NewViewTarget = ReturnedActors[0];
+				APlayerController* PlayerCtrl = Cast<APlayerController>(InstigatorPawn->GetController());
+				if (PlayerCtrl)
+				{
+					PlayerCtrl->SetViewTargetWithBlend(NewViewTarget, 0.5, EViewTargetBlendFunction::VTBlend_Cubic);
+				}
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("SpectatingViewporrt is null, please update it on the GameMode BP"));
+		}
+	}
+
+	OnMissionCompleted(InstigatorPawn);
+}
