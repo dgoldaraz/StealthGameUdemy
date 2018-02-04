@@ -23,10 +23,10 @@ public:
 	AFPSGameMode();
 
 	//Called when the mission is complete
-	void CompleteMision(APawn* InstigatorPawn);
+	void CompleteMision(APawn* InstigatorPawn, bool bMissionSuccess);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnMissionCompleted(APawn* InsitgatorPawn);
+	void OnMissionCompleted(APawn* InsitgatorPawn, bool bMissionSuccess);
 };
 
 
